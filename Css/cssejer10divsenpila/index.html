@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cajas en Pila</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            padding-left: 6%;
+        }
+
+        .full {
+            width: 80%;
+            font-family: Arial, sans-serif;
+            background-color: #009688;
+            padding-left: 20px;
+            text-align: center;
+            padding-bottom: 100%;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .box {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            background-color: white;
+        }
+
+        .box-responsive {
+            background-color: #d3d3d3; 
+        }
+
+        @media (max-width: 1080px) {
+            .box-responsive {
+                background-color: #ffffe0; 
+            }
+        }
+
+        @media (max-width: 600px) {
+            .box-responsive {
+                background-color: #b0e0e6; 
+            }
+        }
+
+        .box-gradient {
+            padding: 5%;
+            background: radial-gradient(circle, #ffdab9, #ff8c00);
+        }
+
+        .box-image {
+            background: radial-gradient(circle, #ffdab9, #ff8c00);
+        }
+
+        .box-text-padding {
+            padding-left: 0px;
+            padding: 5%;
+            background: linear-gradient(90deg, #f0e68c, #ffa500);
+            text-align: left;
+            padding-left: 20px;
+        }
+        .box-text-padding-2 {
+            padding-bottom: 5%;
+            background: linear-gradient(180deg, #f0e68c, #ffa500);
+            text-align: left;
+        }
+
+
+        img {
+            max-width:75%;
+            max-height:75%;
+            margin:1%;
+            }
+
+        p{
+            font-size: small;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="full">
+
+    <h1>Cajas en Pila</h1>
+
+    <div class="box box-responsive">
+        <p>Fondo gris para tamaño de viewport mayor a 1080</p>
+        <p>Fondo amarillo claro para tamaño de viewport entre 600 y 1080</p>
+        <p>Fondo celeste para tamaño de viewport menor a 600</p>
+    </div>
+
+    <div class="box box-gradient">
+        <p>Gradiente radial como fondo.</p>
+    </div>
+
+    <div class="box box-image">
+        <img src="/materia/Especiales/tango.jpg">
+    </div>
+
+    <div class="box box-text-padding">
+        <p>Nodo de Texto en div alineado a la izquierda y con padding</p>
+    </div>
+
+    <div class="box box-text-padding-2">
+        <p>Nodo de Texto5 en div alineado a la izquierda y sin padding</p>
+    </div>
+</div>
+</body>
+</html>
