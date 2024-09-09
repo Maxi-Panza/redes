@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arreglo de Frutas</title>
+</head>
+<body>
+
+    <h1>Variables Multidimensionales</h2>
+    <h2>Array de índice numérico</h3>
+
+    <h3 id="tipo-arreglo"></h3>
+    <h3 id="primer-elemento"></h3>
+    <h3 id="segundo-elemento"></h3>
+    <h3 id="tercer-elemento"></h3>
+    <h3 id="cantidad-elementos"></h3>
+
+    <script>
+        let arregloFrutas = ['banana', 'manzana'];
+
+        let nuevoElemento = prompt('Ingresa un nuevo elemento para el arreglo (opcional):');
+
+        if (nuevoElemento) {
+            arregloFrutas.push(nuevoElemento);
+        }
+
+        document.getElementById('tipo-arreglo').textContent = `Tipo para arregloFrutas: ${typeof arregloFrutas}`;
+        document.getElementById('primer-elemento').textContent = `Primer elemento cargado desde programa: ${arregloFrutas[0]}`;
+        document.getElementById('segundo-elemento').textContent = `Segundo elemento cargado desde programa: ${arregloFrutas[1]}`;
+        document.getElementById('tercer-elemento').textContent = 
+            arregloFrutas.length > 2 
+            ? `Tercer elemento cargado desde teclado: ${arregloFrutas[2]}`
+            : `Tercer elemento cargado desde teclado: no ingresado`;
+        document.getElementById('cantidad-elementos').textContent = `Cantidad de elementos: ${arregloFrutas.length}`;
+    </script>
+
+</body>
+</html>

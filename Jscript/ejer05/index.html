@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arreglos</title>
+</head>
+<body>
+
+    <button id="iniciar-local">Inicialización desde adentro de un procedimiento</button>
+    <button id="iniciar-forzado">Inicialización forzada desde adentro de un procedimiento</button>
+    <button id="mostrar-variable">Muestra variable global</button>
+
+    <script>
+        var globalVar;
+        
+        alert('La variable global se ha asignado pero no tiene valor.');
+        alert(`Valor actual de la variable global: ${globalVar}`);
+        alert(`Tipo de la variable global: ${typeof globalVar}`);
+
+        document.getElementById('iniciar-local').addEventListener('click', function() {
+            var globalVar = prompt('Ingrese un valor para la variable:');
+            if (globalVar !== null) {
+                alert(`Valor asignado: ${globalVar}`);
+                alert(`Tipo de variable: ${typeof globalVar}`);
+            }
+        });
+
+        document.getElementById('iniciar-forzado').addEventListener('click', function() {
+            globalVar = prompt('Ingrese un valor para la variable:');
+            if (globalVar !== null) {
+                alert(`Valor asignado : ${globalVar}`);
+                alert(`Tipo del valor permanente: ${typeof globalVar}`);
+            }
+        });
+
+        document.getElementById('mostrar-variable').addEventListener('click', function() {
+            alert(`Valor actual de la variable global: ${globalVar}`);
+            alert(`Tipo de la variable global: ${typeof globalVar}`);
+        });
+    </script>
+
+</body>
+</html>

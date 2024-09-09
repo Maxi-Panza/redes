@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>alerta</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<style>
+    button{
+        width: auto;
+    }
+</style>
+<body>
+    <h1>Comandos con addeventlistener</h1>
+    <button id="alert">Alert</button><button id="write">Write</button>
+</body>
+<script>
+    document.getElementById("alert").addEventListener('click', function() {
+        alert('Esto es una alerta, las alertas funcionan en todos los navegadores actuales, podes usarlos como no. A veces queda feo en algunas paginas no captar errores y mandar alertas directamente en vez de hacerlos con el estilo de la pagina pero funciona');
+});
+document.getElementById("write").addEventListener('click', function() {
+    document.write('<h1>Fun fact: no hay un limite en cuantas lineas puede tener un html, el unico limite es cuanto soporta tu dispositivo</h1>')
+});
+
+/*
+    var elemento = document.createElement("H1");
+    var texto = document.createTextNode("esto es un comentario");
+    elemento.appendChild(texto);
+    document.body.appendChild(elemento);
+});*/
+</script>   
+</html>

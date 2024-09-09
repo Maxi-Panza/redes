@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variables y Tipos</title>
+    <style>
+        .output {
+            width: 80%;
+            height: 100px;
+            background-color: lightblue;
+            border: 2px solid black;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="btn-z">var z;</button>
+    <button id="btn-a">var a=18;</button>
+    <button id="btn-b">var b="11";</button>
+    <button id="btn-c">var c=2;</button>
+    <button id="btn-sum1">sum1=a+b;</button>
+    <button id="btn-sum2">sum2=a+c;</button>
+
+    <div id="output">
+    </div>
+
+    <script>
+        var z;
+        var a = 1;
+        var b = "1";
+        var c = 2;
+        var sum1 = a + b;
+        var sum2 = a + c;
+
+        function showValue(name, value) {
+            const type = typeof value;
+            document.getElementById('output').innerText = `Valor de ${name}: ${value}\nTipo de ${name}: ${type}`;
+        }
+
+        document.getElementById('btn-z').addEventListener('click', () => showValue('z', z));
+        document.getElementById('btn-a').addEventListener('click', () => showValue('a', a));
+        document.getElementById('btn-b').addEventListener('click', () => showValue('b', b));
+        document.getElementById('btn-c').addEventListener('click', () => showValue('c', c));
+        document.getElementById('btn-sum1').addEventListener('click', () => showValue('sum1', sum1));
+        document.getElementById('btn-sum2').addEventListener('click', () => showValue('sum2', sum2));
+    </script>
+
+</body>
+</html>
