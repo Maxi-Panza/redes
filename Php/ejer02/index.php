@@ -48,11 +48,9 @@
 
     <div class="code-output">
     <?php
-        // Mensajes iniciales
         echo "En este ejemplo se utiliza la funcion include() que ubica código PHP definido en el archivo ejemplo2.inc:<br>";
         echo "Antes de insertar el include las variables declaradas en el mismo no existen.<br>";
 
-        // Intentar usar variables antes del include
         echo "Las variables son:<br>";
 
         if (!isset($arreglo1)) {
@@ -64,15 +62,13 @@
 
         echo "La longitud de los arreglos es: 0<br><br>";
 
-        // Intentar incluir el archivo
         $include_file = 'ejemplo2.inc';
 
         if (file_exists($include_file)) {
-            include($include_file);  // Incluir el archivo si existe
+            include($include_file);
             echo "Aquí ya se ejecutó la función include().<br>";
         } else {
             echo "Error: El archivo $include_file no existe.<br>";
-            // Detener la ejecución si el archivo no existe
             die("El archivo $include_file no existe.");
         }
 
