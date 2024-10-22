@@ -1,57 +1,59 @@
 <?php
-// Conexión a la base de datos
+header('Content-Type: application/json');
+
+function registrarLog($mensaje) {
+    $logFile = '/tmp/debug.log';
+    $fecha = date('Y-m-d H:i:s');
+    $logMessage = "[$fecha] - $mensaje" . PHP_EOL;
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
 $dsn = 'mysql:host=localhost;dbname=futbol;charset=utf8mb4';
-$username = 'root'; // Cambia esto si tienes otro usuario
-$password = ''; // Cambia esto si tienes contraseña
+$username = 'root';
+$password = '';
 $options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Modo de errores como excepciones
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Modo de obtención de datos
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ];
+
 try {
-    // Conectar a la base de datos usando PDO
     $pdo = new PDO($dsn, $username, $password, $options);
 
-    // Obtener el partido a modificar
-    $identificadorPartido = $_GET['identificadorPartido'];
-    $sql = "SELECT * FROM PartidoFutbol WHERE identificadorPartido = :identificadorPartido";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':identificadorPartido', $identificadorPartido);
-    $stmt->execute();
-    $partido = $stmt->fetch();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['identificadorPartido'])) {
+        $identificadorPartido = $_POST['identificadorPartido'];
+        $descripcion = $_POST['descripcion'];
+        $estadio_id = $_POST['estadio_id'];
+        $golesTotales = $_POST['golesTotales'];
+        $fechaPartido = $_POST['fechaPartido'];
 
+        registrarLog("Modificación iniciada para identificadorPartido: $identificadorPartido");
+        registrarLog("Estadio seleccionado para modificar: $estadio_id");
+
+        $sql = "UPDATE PartidoFutbol SET descripcion = :descripcion, estadio_id = :estadio_id, 
+                golesTotales = :golesTotales, fechaPartido = :fechaPartido 
+                WHERE identificadorPartido = :identificadorPartido";
+        registrarLog("Consulta SQL generada: UPDATE PartidoFutbol SET descripcion = '$descripcion', estadio_id = '$estadio_id', golesTotales = $golesTotales, fechaPartido = '$fechaPartido' WHERE identificadorPartido = '$identificadorPartido'");
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+        $stmt->bindParam(':estadio_id', $estadio_id, PDO::PARAM_STR);
+        $stmt->bindParam(':golesTotales', $golesTotales, PDO::PARAM_INT);
+        $stmt->bindParam(':fechaPartido', $fechaPartido);
+        $stmt->bindParam(':identificadorPartido', $identificadorPartido, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            registrarLog("Partido modificado exitosamente para identificadorPartido: $identificadorPartido");
+            echo json_encode(["status" => "success", "message" => "Partido modificado exitosamente."]);
+        } else {
+            registrarLog("Error al modificar el partido: " . json_encode($stmt->errorInfo()));
+            echo json_encode(["status" => "error", "message" => "Error al modificar el partido."]);
+        }
+    } else {
+        registrarLog("Solicitud no válida o falta identificadorPartido.");
+        echo json_encode(["status" => "error", "message" => "Solicitud no válida."]);
+    }
 } catch (PDOException $e) {
-    die("Error en la base de datos: " . $e->getMessage());
+    registrarLog("Error en la base de datos: " . $e->getMessage());
+    echo json_encode(["status" => "error", "message" => "Error en la base de datos."]);
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modificar Partido</title>
-</head>
-<body>
-    <h1>Modificar Partido</h1>
-    <form action="guardar_modificacion.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="identificadorPartido" value="<?= htmlspecialchars($partido['identificadorPartido']); ?>">
-
-        <label for="descripcion">Descripción:</label>
-        <input type="text" name="descripcion" value="<?= htmlspecialchars($partido['descripcion']); ?>" required><br>
-
-        <label for="estadio_id">Estadio:</label>
-        <input type="text" name="estadio_id" value="<?= htmlspecialchars($partido['estadio_id']); ?>" required><br>
-
-        <label for="golesTotales">Goles Totales:</label>
-        <input type="number" name="golesTotales" value="<?= htmlspecialchars($partido['golesTotales']); ?>" required><br>
-
-        <label for="fechaPartido">Fecha del Partido:</label>
-        <input type="date" name="fechaPartido" value="<?= htmlspecialchars($partido['fechaPartido']); ?>" required><br>
-
-        <label for="resumen">Actualizar Resumen (opcional):</label>
-        <input type="file" name="resumen" accept=".pdf, .jpg, .jpeg, .png"><br>
-
-        <button type="submit">Guardar Cambios</button>
-    </form>
-</body>
-</html>
