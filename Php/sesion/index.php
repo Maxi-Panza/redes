@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// Verificar si hay una sesión activa
+if (!isset($_SESSION['ejer08idsesion'])) {
+    header('Location: ./formularioDeLogin.php');
+    exit();
+}
+
+// Incrementar el contador de sesión
+$_SESSION['contador']++;
+
+// Mostrar contenido de la aplicación
+?>
 <!DOCTYPE html>
 <html lang="es">
 
