@@ -1,10 +1,9 @@
 <?php
-header('Content-Type: application/json'); // Asegurar que la respuesta sea JSON
+header('Content-Type: application/json');
 
-// Configuración de la base de datos
 $dsn = 'mysql:host=localhost;dbname=futbol;charset=utf8mb4';
-$username = 'root'; // Cambia esto si tienes otro usuario
-$password = ''; // Cambia esto si tienes contraseña
+$username = 'root'; 
+$password = '';
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -24,7 +23,7 @@ try {
         $partido = $stmt->fetch();
 
         if ($partido) {
-            echo json_encode($partido); // Devolver la respuesta en formato JSON
+            echo json_encode($partido);
         } else {
             echo json_encode(["error" => "No se encontró el partido."]);
         }

@@ -5,7 +5,6 @@ $user = 'root';
 $pass = '';
 
 
-// Función para registrar logs en /tmp/debug.log
 function registrarLog($mensaje) {
     $logFile = '/tmp/debug.log';
     $fecha = date('Y-m-d H:i:s');
@@ -21,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     registrarLog("Datos recibidos para crear usuario: login = $login, apellido = $apellido, nombres = $nombres");
 
-    // Encriptar la contraseña con SHA256
     $hashedPassword = hash('sha256', $password);
     registrarLog("Contraseña encriptada: $hashedPassword");
 
@@ -41,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
 
-        // Insertar el nuevo usuario en la base de datos
         $sql = "INSERT INTO Usuario (loginUsuario, apellidoUsuario, nombresUsuario, passwordUsuario) 
                 VALUES (:login, :apellido, :nombres, :password)";
         $stmt = $pdo->prepare($sql);

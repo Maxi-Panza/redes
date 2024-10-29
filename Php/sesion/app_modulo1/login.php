@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Configuración de la base de datos
 $host = 'localhost';
 $db = 'futbol';
 $user = 'root';
@@ -12,7 +11,6 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES => false,
 ];
 
-// Función para registrar logs en /tmp/debug.log
 function registrarLog($mensaje) {
     $logFile = '/tmp/debug.log';
     $fecha = date('Y-m-d H:i:s');
@@ -20,7 +18,6 @@ function registrarLog($mensaje) {
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
 
-// Función para verificar las credenciales de usuario y actualizar el contador de sesiones
 function autenticacion($log, $cl) {
     global $host, $db, $user, $pass, $options;
     
@@ -28,11 +25,8 @@ function autenticacion($log, $cl) {
         $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
         $pdo = new PDO($dsn, $user, $pass, $options);
 
-        // Encriptar la contraseña con SHA256
         $hashedPassword = hash('sha256', $cl);
-        registrarLog("Contraseña encriptada para login: $hashedPassword");
 
-        // Verificar el login y la contraseña en la base de datos
         $sql = "SELECT * FROM Usuario WHERE loginUsuario = :login AND passwordUsuario = :password";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':login', $log);
@@ -42,7 +36,6 @@ function autenticacion($log, $cl) {
         $usuario = $stmt->fetch();
 
         if ($usuario) {
-            // Actualizar el contador de sesiones
             $contadorActual = $usuario['contadorSesiones'] + 1;
             $sqlUpdate = "UPDATE Usuario SET contadorSesiones = :contador WHERE loginUsuario = :login";
             $stmtUpdate = $pdo->prepare($sqlUpdate);
@@ -52,8 +45,7 @@ function autenticacion($log, $cl) {
 
             registrarLog("Usuario $log autenticado exitosamente. Contador actualizado a $contadorActual.");
 
-            // Almacenar información de sesión
-            $_SESSION['ejer08idsesion'] = session_create_id();
+            $_SESSION['sesionParaUsuario'] = session_create_id();
             $_SESSION['login'] = $log;
             $_SESSION['contador'] = $contadorActual;
 
@@ -81,7 +73,6 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
     }
 
     registrarLog("Sesión iniciada para el usuario: $log.");
-    // Redirigir a la página de bienvenida
     header('Location: ./bienvenida.php');
     exit();
 } else {

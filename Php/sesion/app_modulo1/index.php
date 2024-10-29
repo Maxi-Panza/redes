@@ -1,16 +1,5 @@
 <?php
-session_start();
-
-// Verificar si hay una sesión activa
-if (!isset($_SESSION['ejer08idsesion'])) {
-    header('Location: ./formularioDeLogin.php');
-    exit();
-}
-
-// Incrementar el contador de sesión
-$_SESSION['contador']++;
-
-// Mostrar contenido de la aplicación
+include('../manejoSesion.inc');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,17 +10,15 @@ $_SESSION['contador']++;
     <title>Tabla de Partidos de Fútbol</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-/* Estilo general */
 body {
     font-family: Arial, sans-serif;
-    background-color: #F5F5DC; /* Fondo beige */
+    background-color: #F5F5DC; 
     margin: 0;
     padding: 0;
 }
 
-/* Header */
 header {
-    background-color: #F5F5DC; /* Fondo beige */
+    background-color: #F5F5DC; 
     color: black;
     text-align: center;
     padding: 20px;
@@ -40,9 +27,8 @@ header {
     border-bottom: 2px solid #808080;
 }
 
-/* Footer */
 footer {
-    background-color: #F5F5DC; /* Fondo beige */
+    background-color: #F5F5DC; 
     color: black;
     text-align: center;
     padding: 10px;
@@ -52,15 +38,13 @@ footer {
     border-top: 2px solid #808080;
 }
 
-/* Contenedor principal */
 .container {
     padding: 20px;
 }
 
-/* Tabla de entrada de datos */
 .table-input {
     width: 100%;
-    background-color: #FF6347; /* Fondo rojo */
+    background-color: #FF6347;
     color: white;
     border-collapse: collapse;
 }
@@ -80,7 +64,6 @@ footer {
     border-radius: 4px;
 }
 
-/* Tabla de datos */
 .table-data {
     width: 100%;
     border-collapse: collapse;
@@ -102,9 +85,8 @@ footer {
     text-align: center;
 }
 
-/* Botones de acciones */
 .action-button {
-    background-color: #D3D3D3; /* Fondo gris claro */
+    background-color: #D3D3D3;
     color: black;
     border: 1px solid #808080;
     padding: 5px 10px;
@@ -118,20 +100,18 @@ footer {
     background-color: #C0C0C0;
 }
 
-/* Estilos de Modificar y Borrar */
 .modify-button {
-    background-color: #4CAF50; /* Verde */
+    background-color: #4CAF50;
     color: white;
 }
 
 .delete-button {
-    background-color: #F44336; /* Rojo */
+    background-color: #F44336;
     color: white;
 }
 
-/* Ventana Modal */
 .modal {
-    display: none; /* Oculto por defecto */
+    display: none; 
     position: fixed;
     z-index: 1;
     left: 0;
@@ -153,7 +133,6 @@ footer {
     color: white;
 }
 
-/* Botón de cierre de la ventana modal */
 .close {
     color: #aaa;
     float: right;
@@ -169,10 +148,9 @@ footer {
     cursor: pointer;
 }
 
-/* Inputs de la ventana modal */
 .modal-content input[type="text"],
 .modal-content select {
-    width: calc(100% - 20px); /* Ajuste para padding y borde */
+    width: calc(100% - 20px);
     padding: 10px;
     margin: 8px 0;
     display: inline-block;
@@ -187,7 +165,6 @@ footer {
     outline: none;
 }
 
-/* Botón de enviar dentro de la modal */
 .modal-content .submit-button {
     background-color: #FF6347;
     color: white;
@@ -203,7 +180,6 @@ footer {
     background-color: #D94E3B;
 }
 
-/* Ajuste responsive */
 @media (max-width: 768px) {
     .modal-content {
         width: 80%;
@@ -253,6 +229,7 @@ footer {
         <button id="altaDato" class="btn">Alta dato</button>
         <button id="limpiarFiltros" class="btn btn-secondary">Limpiar Filtros</button>
         <button id="borrarTabla" class="btn btn-danger">Borrar Datos de la Tabla</button>
+        <button id="btCierraSesion">Cierra Sesión</button>
 
     </div>
 
@@ -330,44 +307,57 @@ footer {
         </div>
     </div>
 
+    <div id="modalArchivo" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="iframeArchivo" src="" frameborder="0" style="width: 100%; height: 500px;"></iframe>
+        </div>
+    </div>
 
-    <button id="verArchivo" style="display:none;">Ver Archivo</button>
-
-    <div id="archivoVisualizacion" style="display:none;"></div>
-
-
-    <button id="verArchivo" style="display:none;">Ver Archivo</button>
-
-    <div id="archivoVisualizacion" style="display:none;"></div>
+    <div class="modal fade" id="modalArchivo" tabindex="-1" aria-labelledby="modalArchivoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoLabel">Ver Archivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="iframeArchivo" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <footer>
         <p id="contadorRegistros">Cantidad de registros: 0</p>
     </footer>
     <script>
 $(document).ready(function () {
-    // Variables para el ordenamiento
     let sort_column = ''; 
     let sort_direction = 'ASC'; 
 
-    // Cargar datos al hacer clic en 'Cargar Datos'
     $('#cargarDatos').on('click', function () {
         cargarDatos();
     });
 
-    // Capturar clic en encabezados de columnas para ordenamiento
     $('.sort').on('click', function () {
         sort_column = $(this).data('column');
-        sort_direction = sort_direction === 'ASC' ? 'DESC' : 'ASC'; // Alternar dirección
-        cargarDatos(); // Cargar datos ordenados
+        sort_direction = sort_direction === 'ASC' ? 'DESC' : 'ASC'; 
+        cargarDatos(); 
     });
+
+    $("#btCierraSesion").click(function() {
+        location.href = "./destruirsesion.php";
+    });
+
     function actualizarContador() {
         const cantidadRegistros = $('#tablaFutbol tbody tr').length;
         $('#contadorRegistros').text('Cantidad de registros: ' + cantidadRegistros);
     }
 
-        // Botón para limpiar filtros
         $('#limpiarFiltros').on('click', function () {
-        // Limpiar todos los inputs de filtro
         $('#identificadorFiltro').val('');
         $('#descripcionFiltro').val('');
         $('#estadioFiltro').val('');
@@ -377,12 +367,10 @@ $(document).ready(function () {
         alert('Filtros limpiados.');
     });
 
-    // Botón para borrar los datos de la tabla
     $('#borrarTabla').on('click', function () {
-        $('#tablaFutbol tbody').html(''); // Vaciar el contenido de la tabla
+        $('#tablaFutbol tbody').html(''); 
     });
 
-    // Función para cargar datos con filtros y ordenamiento
     function cargarDatos() {
         const identificadorFiltro = $('#identificadorFiltro').val();
         const descripcionFiltro = $('#descripcionFiltro').val();
@@ -425,7 +413,7 @@ $(document).ready(function () {
                 });
 
                 $('#tablaFutbol tbody').html(html);
-                bindActionsToButtons(); // Asignar eventos a los botones
+                bindActionsToButtons(); 
                 actualizarContador();
             },
             error: function () {
@@ -438,24 +426,36 @@ $(document).ready(function () {
 
 
 function bindActionsToButtons() {
-    // Ver archivo
-    $('.ver-archivo').on('click', function () {
+    /*$('.ver-archivo').on('click', function () {
         const identificadorPartido = $(this).data('id');
         window.location.href = 'ver_archivo.php?identificadorPartido=' + identificadorPartido;
+    });*/
+    $('.ver-archivo').on('click', function () {
+            var identificadorPartido = $(this).data('id');
+            $('#iframeArchivo').attr('src', 'ver_archivo.php?identificadorPartido=' + identificadorPartido);            $('#modalArchivo').show(); // Mostrar el modal
+        });
+
+    $(document).on('click', '.close', function () {
+        $('#modalArchivo').fadeOut(); 
+        $('#iframeArchivo').attr('src', ''); 
     });
 
-    // Modificar partido
+    $(window).on('click', function (event) {
+        if ($(event.target).is('#modalArchivo')) {
+            $('#modalArchivo').fadeOut(); 
+            $('#iframeArchivo').attr('src', '');
+        }
+    });
+
     $('.modificar-partido').on('click', function () {
         const fila = $(this).closest('tr');
 
-        // Extraer datos de la fila
         const identificadorPartido = fila.find('td').eq(0).text();
         const descripcion = fila.find('td').eq(1).text();
         const estadio_id = fila.find('td').eq(2).text();
         const golesTotales = fila.find('td').eq(3).text();
         const fechaPartido = fila.find('td').eq(4).text();
 
-        // Precargar datos en el modal de modificación
         $('#modificarIdentificadorPartido').val(identificadorPartido);
         $('#modificarDescripcion').val(descripcion);
         $('#modificarGolesTotales').val(golesTotales);
@@ -463,7 +463,6 @@ function bindActionsToButtons() {
 
         $('#modificarEstadio').empty();
 
-        // Cargar estadios en el select del modal de modificación
         $.ajax({
             url: 'load_estadios.php',
             method: 'GET',
@@ -484,7 +483,6 @@ function bindActionsToButtons() {
         });
     });
 
-    // Eliminar partido
     $('.eliminar-partido').on('click', function () {
         const identificadorPartido = $(this).data('id');
         if (confirm('¿Estás seguro de que deseas eliminar este partido?')) {
@@ -508,12 +506,10 @@ function bindActionsToButtons() {
         }
     });
 }
-// Cerrar el modal de modificación
 $('.close').on('click', function () {
-    $('#modalModificar').hide();
+    $('#modalModificar').fadeOut();
 });
 
-// Enviar formulario de modificación de partido
 $('#modificarPartidoForm').on('submit', function (event) {
     event.preventDefault();
     const formData = new FormData(this);
@@ -535,17 +531,14 @@ $('#modificarPartidoForm').on('submit', function (event) {
     });
 });
 
-// Mostrar el modal de alta de partido
 $('#altaDato').on('click', function () {
     $('#modalAlta').show(); 
 });
 
-// Cerrar el modal de alta de partido
 $('.close').on('click', function () {
     $('#modalAlta').hide(); 
 });
 
-// Enviar formulario de alta de partido
 $('#altaPartidoForm').on('submit', function (event) {
     event.preventDefault();
     const formData = new FormData(this); 
@@ -560,7 +553,7 @@ $('#altaPartidoForm').on('submit', function (event) {
             alert('Partido dado de alta exitosamente');
             $('#altaPartidoForm')[0].reset();
             $('#modalAlta').hide();
-            cargarDatos(); // Recargar datos
+            cargarDatos();
         },
         error: function () {
             alert('Error al dar de alta el partido');

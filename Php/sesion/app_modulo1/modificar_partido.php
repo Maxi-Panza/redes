@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-// Función para registrar logs en /tmp/debug.log
 function registrarLog($mensaje) {
     $logFile = '/tmp/debug.log';
     $fecha = date('Y-m-d H:i:s');
@@ -9,7 +8,6 @@ function registrarLog($mensaje) {
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
 
-// Configuración de la base de datos
 $dsn = 'mysql:host=localhost;dbname=futbol;charset=utf8mb4';
 $username = 'root';
 $password = '';
@@ -31,7 +29,6 @@ try {
         registrarLog("Modificación iniciada para identificadorPartido: $identificadorPartido");
         registrarLog("Estadio seleccionado para modificar: $estadio_id");
 
-        // Verificar si se sube un nuevo archivo "resumen"
         if (isset($_FILES['resumen']) && $_FILES['resumen']['error'] === 0) {
             $fileTmpName = $_FILES['resumen']['tmp_name'];
             $fileData = file_get_contents($fileTmpName);
@@ -46,7 +43,6 @@ try {
             $stmt->bindParam(':resumen', $fileData, PDO::PARAM_LOB);
             registrarLog("Actualizando el partido con el archivo resumen.");
         } else {
-            // Si no se sube un archivo nuevo, no se modifica el campo 'resumen'
             $sql = "UPDATE PartidoFutbol SET descripcion = :descripcion, estadio_id = :estadio_id, 
                     golesTotales = :golesTotales, fechaPartido = :fechaPartido 
                     WHERE identificadorPartido = :identificadorPartido";
@@ -55,14 +51,12 @@ try {
             registrarLog("Actualizando el partido sin modificar el archivo resumen.");
         }
 
-        // Asignar los parámetros comunes
         $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
         $stmt->bindParam(':estadio_id', $estadio_id, PDO::PARAM_STR);
         $stmt->bindParam(':golesTotales', $golesTotales, PDO::PARAM_INT);
         $stmt->bindParam(':fechaPartido', $fechaPartido);
         $stmt->bindParam(':identificadorPartido', $identificadorPartido, PDO::PARAM_STR);
 
-        // Ejecutar la consulta
         if ($stmt->execute()) {
             registrarLog("Partido modificado exitosamente para identificadorPartido: $identificadorPartido");
             echo json_encode(["status" => "success", "message" => "Partido modificado exitosamente."]);
